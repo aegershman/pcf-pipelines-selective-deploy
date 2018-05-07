@@ -9,7 +9,7 @@ resources:
 - name: pcf-pipelines
   type: git
   source:
-    uri: git@github.com:aegershman/pcf-pipelines-selective-deploy.git
+    uri: https://github.com/aegershman/pcf-pipelines-selective-deploy.git
 
 - name: tile
   type: pivnet
