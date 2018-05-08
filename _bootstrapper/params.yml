@@ -1,0 +1,9 @@
+# ((param)) syntax defers the variable
+# interpolation up to Credhub
+
+ci:
+  url: ((ci.url))
+  team: ((ci.team))
+  username: ((ci.username))
+  password: ((ci.password))
+  target: "pcf-pipelines"

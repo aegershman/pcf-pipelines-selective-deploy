@@ -1,0 +1,22 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: czero/cflinuxfs2
+    tag: 'latest'
+
+inputs:
+- name: pcf-pipelines
+
+params:
+  DEBUG: 'false'
+  URL:
+  TEAM:
+  USERNAME:
+  PASSWORD:
+  TARGET: "pcf-pipelines"
+
+run:
+  path: pcf-pipelines/tasks/set-pipelines/task.sh

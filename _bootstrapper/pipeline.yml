@@ -1,0 +1,20 @@
+resources:
+- name: pcf-pipelines
+  type: git
+  source:
+    uri: https://github.com/aegershman/pcf-pipelines-selective-deploy.git
+
+jobs:
+- name: bootstrap
+  serial: true
+  plan:
+  - get: pcf-pipelines
+    trigger: true
+  - task: set-pipelines
+    file: pcf-pipelines/tasks/set-pipelines/task.yml
+    params:
+      URL: ((ci.url))
+      TEAM: ((ci.team))
+      USERNAME: ((ci.username))
+      PASSWORD: ((ci.password))
+      TARGET: ((ci.target))
