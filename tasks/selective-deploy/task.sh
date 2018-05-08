@@ -1,6 +1,8 @@
 #!/bin/bash
 
-set -euo pipefail
+set -eu
+
+[ 'true' = "${DEBUG:-}" ] && set -x
 
 STAGED=$(om-linux \
 	--skip-ssl-validation \
