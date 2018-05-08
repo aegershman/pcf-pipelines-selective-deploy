@@ -19,17 +19,39 @@ resources:
     product_version: {{product_version_regex}}
     sort_by: semver
 
+- name: schedule
+  type: time
+  source:
+    interval: 30m
+
 jobs:
+- name: regulator
+  plan:
+  - get: schedule
+    trigger: true
+  - get: tile
+    params: { globs: [] }
+
 - name: upload-and-stage-tile
   plan:
   - aggregate:
     - get: pcf-pipelines
     - get: pivnet-product
       resource: tile
+      passed: [regulator]
       trigger: true
       params:
         globs:
         - {{product_globs}}
+
+  - task: wait-opsman-clear
+    file: pcf-pipelines/tasks/wait-opsman-clear/task.yml
+    params:
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_USERNAME: {{opsman_admin_username}}
+      OPSMAN_PASSWORD: {{opsman_admin_password}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
 
   - task: upload-tile-and-stemcell
     file: pcf-pipelines/tasks/upload-product-and-stemcell/task.yml
@@ -45,7 +67,7 @@ jobs:
       OM_IP: ""
 
   - task: stage-tile
-    file: pcf-pipelines/tasks/stage-tile/task.yml
+    file: pcf-pipelines/tasks/stage-product/task.yml
     params:
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
@@ -67,6 +89,18 @@ jobs:
 
   - task: selective-deploy
     file: pcf-pipelines/tasks/selective-deploy/task.yml
+    params:
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_USERNAME: {{opsman_admin_username}}
+      OPSMAN_PASSWORD: {{opsman_admin_password}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
+
+- name: delete-unused-products
+  plan:
+  - get: pcf-pipelines
+  - task: delete-unused-products
+    file: pcf-pipelines/tasks/delete-unused-products/task.yml
     params:
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}

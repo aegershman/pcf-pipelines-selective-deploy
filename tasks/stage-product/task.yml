@@ -18,4 +18,4 @@ params:
   OPSMAN_DOMAIN_OR_IP_ADDRESS:
 
 run:
-  path: pcf-pipelines/tasks/stage-tile/task.sh
+  path: pcf-pipelines/tasks/stage-product/task.sh
