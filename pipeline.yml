@@ -31,8 +31,7 @@ jobs:
 - name: upload-stemcell
   plan:
   - get: pcf-pipelines
-  - get: pivnet-product
-    resource: stemcell
+  - get: stemcell
     trigger: true
     params:
       globs:

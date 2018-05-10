@@ -11,7 +11,7 @@ if [[ -n "$NO_PROXY" ]]; then
 	echo "$OM_IP $OPSMAN_DOMAIN_OR_IP_ADDRESS" >>/etc/hosts
 fi
 
-cd pivnet-product
+cd stemcell/
 
 SC_FILE_PATH=$(find ./ -name "*.tgz")
 

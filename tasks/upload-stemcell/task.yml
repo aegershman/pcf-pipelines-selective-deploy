@@ -19,7 +19,7 @@ params:
   DEBUG: 'true'
 
 inputs:
-  - name: pivnet-product
+  - name: stemcell
   - name: pcf-pipelines
 
 run:
