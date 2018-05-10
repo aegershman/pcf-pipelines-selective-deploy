@@ -22,7 +22,7 @@ fi
 
 # TODO: using latest built version of om-linux to get access to certain features which aren't quite released yet
 om-linux-venerable \
-	--target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
+	--target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
 	--client-id "${OPSMAN_CLIENT_ID}" \
 	--client-secret "${OPSMAN_CLIENT_SECRET}" \
 	--username "$OPS_MGR_USR" \
