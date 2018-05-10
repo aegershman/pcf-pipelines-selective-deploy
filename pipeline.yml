@@ -19,18 +19,36 @@ resources:
     product_version: {{product_version_regex}}
     sort_by: semver
 
-- name: schedule
-  type: time
+- name: stemcell
+  type: pivnet
   source:
-    interval: 30m
+    api_token: {{pivnet_token}}
+    product_slug: "stemcells"
+    product_version: {{product_stemcell_version_regex}}
+    sort_by: semver
 
 jobs:
-- name: regulator
+- name: upload-stemcell
   plan:
-  - get: schedule
+  - get: pcf-pipelines
+  - get: stemcell
     trigger: true
-  - get: tile
-    params: { globs: [] }
+    params:
+      globs:
+      - "*aws*"
+
+  - task: upload-stemcell
+    file: pcf-pipelines/tasks/upload-stemcell/task.yml
+    params:
+      IAAS: {{iaas_type}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
+      OPSMAN_CLIENT_ID: {{opsman_client_id}}
+      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPS_MGR_USR: {{opsman_admin_username}}
+      OPS_MGR_PWD: {{opsman_admin_password}}
+      PIVNET_API_TOKEN: {{pivnet_token}}
+      NO_PROXY: ""
+      OM_IP: ""
 
 - name: upload-and-stage-tile
   plan:
@@ -38,7 +56,6 @@ jobs:
     - get: pcf-pipelines
     - get: pivnet-product
       resource: tile
-      passed: [regulator]
       trigger: true
       params:
         globs:
@@ -70,6 +87,9 @@ jobs:
   plan:
   - aggregate:
     - get: pcf-pipelines
+    - get: stemcell
+      passed: [ upload-stemcell ]
+      trigger: true
     - get: pivnet-product
       resource: tile
       passed: [ upload-and-stage-tile ]
@@ -77,6 +97,9 @@ jobs:
       params:
         globs:
         - {{product_globs}}
+
+  - task: stage-stemcell
+    file: pcf-pipelines/tasks/stage-stemcell/task.yml
 
   - task: selective-deploy
     file: pcf-pipelines/tasks/selective-deploy/task.yml
