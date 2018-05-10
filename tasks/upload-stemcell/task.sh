@@ -4,9 +4,8 @@ set -eu
 
 [ 'true' = "${DEBUG:-}" ] && set -x
 
-cd pcf-pipelines/tasks/upload-stemcell
-export PATH="$PATH":$(pwd)
-cd ../../..
+# TODO: using latest built version of om-linux to get access to certain features which aren't quite released yet
+export PATH="$PATH":$(pwd)/pcf-pipelines
 
 if [[ -n "$NO_PROXY" ]]; then
 	echo "$OM_IP $OPSMAN_DOMAIN_OR_IP_ADDRESS" >>/etc/hosts
@@ -21,7 +20,7 @@ if [ ! -f "$SC_FILE_PATH" ]; then
 	exit 1
 fi
 
-# TODO building latest version of om-linux to get access to certain features
+# TODO: using latest built version of om-linux to get access to certain features which aren't quite released yet
 om-linux-venerable \
 	--target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
 	--client-id "${OPSMAN_CLIENT_ID}" \
