@@ -4,9 +4,9 @@ set -eu
 
 [ 'true' = "${DEBUG:-}" ] && set -x
 
-cd pcf-pipelines
+cd pcf-pipelines/tasks/upload-stemcell
 export PATH="$PATH":$(pwd)
-cd ..
+cd ../../..
 
 if [[ -n "$NO_PROXY" ]]; then
 	echo "$OM_IP $OPSMAN_DOMAIN_OR_IP_ADDRESS" >>/etc/hosts
