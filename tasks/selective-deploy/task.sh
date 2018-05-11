@@ -36,10 +36,11 @@ om-linux \
 	--request POST \
 	--data "$DATA"
 
-# This *should* reattach the log stream to the current apply-changes job
+# https://github.com/aegershman/pcf-pipelines-selective-deploy/issues/1
+# This should reattach the log stream to the current apply-changes job
 # We shouldn't have to parse the "installation_id" returned from the POST
 # above; we should be able to just do "apply-changes" and instead of it
-# actually applying changes, it reattaches to the log stream... Hopefully?
+# actually applying changes, it reattaches to the log stream.
 #
 # Also, just in case this does screw up somehow, we're passing in
 # skip-deploy-products in the hopes that it only applies changes
