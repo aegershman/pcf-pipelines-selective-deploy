@@ -13,7 +13,11 @@ PRODUCT_NAME="$(
 		cut -d' ' -f 2
 )"
 
-DESIRED_VERSION=$(jq --raw-output '.Release.Version' <./pivnet-product/metadata.json)
+DESIRED_VERSION=$(
+	cat metadata/*.yml |
+		grep '^product_version' |
+		cut -d' ' -f 2
+)
 
 om-linux \
 	--target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
