@@ -34,6 +34,7 @@ PRODUCT_NAME="$(cat metadata/*.yml |
 
 PRODUCT_GUID=$(echo "$STAGED" |
 	jq \
+		--raw-output \
 		--arg product_name "$PRODUCT_NAME" \
 		'map(select(.type == $product_name)) | .[].guid'
 )
@@ -55,7 +56,7 @@ DATA=$(jq \
 )
 
 # TODO: using latest built version of om-linux to get access to certain features which aren't quite released yet
-./om-linux-venerable \
+om-linux-venerable \
 	--target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
 	--client-id "${OPSMAN_CLIENT_ID}" \
 	--client-secret "${OPSMAN_CLIENT_SECRET}" \

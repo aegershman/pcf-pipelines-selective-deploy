@@ -90,6 +90,10 @@ jobs:
     - get: stemcell
       passed: [ upload-stemcell ]
       trigger: true
+      params:
+        globs:
+        - "*aws*"
+
     - get: pivnet-product
       resource: tile
       passed: [ upload-and-stage-tile ]
@@ -111,11 +115,11 @@ jobs:
       NO_PROXY: ""
       OM_IP: ""
 
-  - task: selective-deploy
-    file: pcf-pipelines/tasks/selective-deploy/task.yml
-    params:
-      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPSMAN_USERNAME: {{opsman_admin_username}}
-      OPSMAN_PASSWORD: {{opsman_admin_password}}
-      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
+  # - task: selective-deploy
+  #   file: pcf-pipelines/tasks/selective-deploy/task.yml
+  #   params:
+  #     OPSMAN_CLIENT_ID: {{opsman_client_id}}
+  #     OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+  #     OPSMAN_USERNAME: {{opsman_admin_username}}
+  #     OPSMAN_PASSWORD: {{opsman_admin_password}}
+  #     OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
