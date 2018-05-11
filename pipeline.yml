@@ -54,18 +54,12 @@ jobs:
       params:
         globs: [ {{product_globs}} ]
 
-  - task: upload-tile-and-stemcell
-    file: pcf-pipelines/tasks/upload-product-and-stemcell/task.yml
+  - task: upload-tile
+    file: pcf-pipelines/tasks/upload-product/task.yml
     params:
-      IAAS: {{iaas_type}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPS_MGR_USR: {{opsman_admin_username}}
-      OPS_MGR_PWD: {{opsman_admin_password}}
-      PIVNET_API_TOKEN: {{pivnet_token}}
-      NO_PROXY: ""
-      OM_IP: ""
 
 - name: stage-and-apply-changes
   plan:
@@ -88,8 +82,6 @@ jobs:
     params:
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPSMAN_USERNAME: {{opsman_admin_username}}
-      OPSMAN_PASSWORD: {{opsman_admin_password}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
 
   - task: stage-stemcell
