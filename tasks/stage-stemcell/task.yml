@@ -7,16 +7,10 @@ image_resource:
     repository: pcfnorm/rootfs
 
 params:
-  OPSMAN_DOMAIN_OR_IP_ADDRESS:
-  OPSMAN_CLIENT_ID:
-  OPSMAN_CLIENT_SECRET:
-  OPS_MGR_USR:
-  OPS_MGR_PWD:
-  PIVNET_API_TOKEN:
-  NO_PROXY:
-  OM_IP:
-  IAAS:
-  DEBUG: 'true'
+  OPSMAN_DOMAIN_OR_IP_ADDRESS: ~
+  OPSMAN_CLIENT_ID: ~
+  OPSMAN_CLIENT_SECRET: ~
+  DEBUG: 'false'
 
 inputs:
   - name: stemcell

@@ -35,21 +35,14 @@ jobs:
   - get: stemcell
     trigger: true
     params:
-      globs:
-        - {{stemcell_globs}}
+      globs: [ {{stemcell_globs}} ]
 
   - task: upload-stemcell
     file: pcf-pipelines/tasks/upload-stemcell/task.yml
     params:
-      IAAS: {{iaas_type}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPS_MGR_USR: {{opsman_admin_username}}
-      OPS_MGR_PWD: {{opsman_admin_password}}
-      PIVNET_API_TOKEN: {{pivnet_token}}
-      NO_PROXY: ""
-      OM_IP: ""
 
 - name: upload-and-stage-tile
   plan:
@@ -59,8 +52,7 @@ jobs:
       resource: tile
       trigger: true
       params:
-        globs:
-        - {{product_globs}}
+        globs: [ {{product_globs}} ]
 
   - task: upload-tile-and-stemcell
     file: pcf-pipelines/tasks/upload-product-and-stemcell/task.yml
@@ -93,16 +85,14 @@ jobs:
       passed: [ upload-stemcell ]
       trigger: true
       params:
-        globs:
-        - {{stemcell_globs}}
+        globs: [ {{stemcell_globs}} ]
 
     - get: pivnet-product
       resource: tile
       passed: [ upload-and-stage-tile ]
       trigger: true
       params:
-        globs:
-        - {{product_globs}}
+        globs: [ {{product_globs}} ]
 
   - task: stage-stemcell
     file: pcf-pipelines/tasks/stage-stemcell/task.yml
