@@ -19,6 +19,7 @@ resources:
     product_slug: {{product_slug}}
     product_version: {{product_version_regex}}
     sort_by: semver
+    region: {{pivnet_region}}
 
 - name: stemcell
   type: pivnet
@@ -27,6 +28,7 @@ resources:
     product_slug: {{stemcell_slug}}
     product_version: {{product_stemcell_version_regex}}
     sort_by: semver
+    region: {{pivnet_region}}
 
 - name: opsman-lock
   type: pool

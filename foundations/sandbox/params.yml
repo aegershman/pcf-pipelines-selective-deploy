@@ -22,6 +22,8 @@ opsman_domain_or_ip_address: ((sandbox-opsman.domain_or_ip_address))
 # https://network.pivotal.io/users/dashboard/edit-profile
 pivnet_token: ((pivnet_token))
 
+pivnet_region: us-west-2
+
 # The globs regular expression for the PivNet resource to download the product
 # release files. "*pivotal" is the default.
 # For products such as ERT, it is recommended to use "cf*pivotal" to avoid the
