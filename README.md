@@ -20,6 +20,23 @@ Go to `foundations/`, fill out a folder with `tiles/` and `params.yml`. Each `pr
 
 (`tiles-jail/` just holds tiles that I don't want to create pipelines for yet. Once you're ready to create a pipeline for it, move the tile into `tiles/`)
 
+## POOL_LOCKS
+
+**Rationale:** In order to prevent individual tile pipelines from trying to install at the same time, we need a mutex on the Opsman. We can _either_ run a poll-wait task (e.g., `wait-opsman-clear` from pcf-pipelines), but there's a number of problems with that. We can now have multiple products/changes staged, and our selective deploys will (should?) only apply changes to certain products. So if we used `wait-opsman-clear`, it would wait for the _entire_ `staged changes` queue to be clear. In this Brave New World™, we only need to poll-wait on running installations. Therefore, we could either write a `wait-opsman-clear`-like task which poll-waits when it sees "`{"error": "installation in progress"}` returned from the Opsman, OR... We could use the [pool-resource](https://github.com/concourse/pool-resource).
+
+Instead of creating a separate repository, we're keeping the "opsman lock" on a separate branch, `POOL_LOCKS`. This branch was created using the following commands:
+
+```bash
+git checkout --orphan POOL_LOCKS
+git rm --cached -rf .
+rm -rf -- *
+rm -f .gitignore .gitmodules
+git commit --allow-empty -m "initial root commit"
+git push origin POOL_LOCKS
+```
+
+That creates an empty branch. Then, you just set it up like how they do in the `pool-resource` documentation.
+
 ## ideas / concerns
 
 If you've got feedback, questions, concerns, ideas, praise, vitriol, etc., [please create an issue](https://github.com/aegershman/pcf-pipelines-selective-deploy/issues). Any comments are welcome.
