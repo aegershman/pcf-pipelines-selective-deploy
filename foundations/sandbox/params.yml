@@ -56,4 +56,4 @@ opsman_lock_branch: POOL_LOCKS
 opsman_lock_username: ~
 opsman_lock_password: ~
 opsman_lock_retry_delay: 30s
-opsman_lock_pool: opsman
+opsman_lock_pool: sandbox-opsman
