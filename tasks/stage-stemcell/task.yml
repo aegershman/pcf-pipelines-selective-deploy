@@ -16,10 +16,12 @@ params:
   NO_PROXY:
   OM_IP:
   IAAS:
+  DEBUG: 'true'
 
 inputs:
-  - name: pivnet-product
+  - name: stemcell
   - name: pcf-pipelines
+  - name: pivnet-product
 
 run:
   path: pcf-pipelines/tasks/stage-stemcell/task.sh
