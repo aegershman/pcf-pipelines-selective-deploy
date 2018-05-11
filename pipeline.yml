@@ -28,15 +28,25 @@ resources:
     product_version: {{product_stemcell_version_regex}}
     sort_by: semver
 
+- name: opsman-lock
+  type: pool
+  source:
+    uri: {{opsman_lock_uri}}
+    branch: {{opsman_lock_branch}}
+    username: {{opsman_lock_username}}
+    password: {{opsman_lock_password}}
+    retry_delay: {{opsman_lock_retry_delay}}
+    pool: {{opsman_lock_pool}}
+
 jobs:
 - name: upload-stemcell
   plan:
-  - get: pcf-pipelines
-  - get: stemcell
-    trigger: true
-    params:
-      globs: [ {{stemcell_globs}} ]
-
+  - aggregate:
+    - get: pcf-pipelines
+    - get: stemcell
+      trigger: true
+      params:
+        globs: [ {{stemcell_globs}} ]
   - task: upload-stemcell
     file: pcf-pipelines/tasks/upload-stemcell/task.yml
     params:
@@ -53,7 +63,6 @@ jobs:
       trigger: true
       params:
         globs: [ {{product_globs}} ]
-
   - task: upload-tile
     file: pcf-pipelines/tasks/upload-product/task.yml
     params:
@@ -64,12 +73,18 @@ jobs:
 - name: stage-and-apply-changes
   plan:
   - aggregate:
+
+    - put: opsman-lock
+      params: {acquire: true}
+
     - get: pcf-pipelines
+
     - get: stemcell
       passed: [ upload-stemcell ]
       trigger: true
       params:
         globs: [ {{stemcell_globs}} ]
+
     - get: pivnet-product
       resource: tile
       passed: [ upload-tile ]
@@ -97,3 +112,8 @@ jobs:
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
+
+  ensure:
+    put: opsman-lock
+    params:
+      release: opsman-lock
