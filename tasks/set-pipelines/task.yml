@@ -8,14 +8,14 @@ image_resource:
     tag: 'latest'
 
 inputs:
-- name: pcf-pipelines
+  - name: pcf-pipelines
 
 params:
   DEBUG: 'false'
-  URL:
-  TEAM:
-  USERNAME:
-  PASSWORD:
+  URL: ~
+  TEAM: ~
+  USERNAME: ~
+  PASSWORD: ~
   TARGET: "pcf-pipelines"
 
 run:

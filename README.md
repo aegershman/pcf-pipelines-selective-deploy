@@ -1,8 +1,8 @@
 # pcf-pipelines-selective-deploy
 
-![basic minimal compelling product](_assets/simple-pipeline.png)
+![single-foundation pipeline](_assets/v1.png)
 
-This project is a minimal-compelling product & demonstration of automated selective-deploys for both products and stemcells. New product patch version comes out? Download/stage/selective-deploy it. New stemcell comes out for a product? No problem. Download/upload the latest stemcell, _selectively apply the stemcell to a single product_, then do a selective deploy on *only* that product.
+This project is a minimal-compelling product & demonstration of automated selective-deploys for both products and stemcells for a single foundation. New product patch version comes out? Download/stage/selective-deploy it. New stemcell comes out for a product? No problem. Download/upload the latest stemcell, _selectively apply the stemcell to a single product_, then do a selective deploy on *only* that product.
 
 Not only can we take the latest stemcells (previously we just waited until a new tile version came out & it bumped the stemcell for us), we can now selectively deploy those stemcells on a product-by-product basis.
 

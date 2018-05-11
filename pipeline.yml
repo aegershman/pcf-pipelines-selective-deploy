@@ -44,7 +44,7 @@ jobs:
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
 
-- name: upload-and-stage-tile
+- name: upload-tile
   plan:
   - aggregate:
     - get: pcf-pipelines
@@ -67,6 +67,21 @@ jobs:
       NO_PROXY: ""
       OM_IP: ""
 
+- name: stage-and-apply-changes
+  plan:
+  - aggregate:
+    - get: pcf-pipelines
+    - get: stemcell
+      passed: [ upload-stemcell ]
+      trigger: true
+      params:
+        globs: [ {{stemcell_globs}} ]
+    - get: pivnet-product
+      resource: tile
+      passed: [ upload-tile ]
+      trigger: true
+      params:
+        globs: [ {{product_globs}} ]
 
   - task: stage-tile
     file: pcf-pipelines/tasks/stage-product/task.yml
@@ -77,42 +92,16 @@ jobs:
       OPSMAN_PASSWORD: {{opsman_admin_password}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
 
-- name: apply-changes
-  plan:
-  - aggregate:
-    - get: pcf-pipelines
-    - get: stemcell
-      passed: [ upload-stemcell ]
-      trigger: true
-      params:
-        globs: [ {{stemcell_globs}} ]
-
-    - get: pivnet-product
-      resource: tile
-      passed: [ upload-and-stage-tile ]
-      trigger: true
-      params:
-        globs: [ {{product_globs}} ]
-
   - task: stage-stemcell
     file: pcf-pipelines/tasks/stage-stemcell/task.yml
     params:
-      IAAS: {{iaas_type}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPS_MGR_USR: {{opsman_admin_username}}
-      OPS_MGR_PWD: {{opsman_admin_password}}
-      PIVNET_API_TOKEN: {{pivnet_token}}
-      NO_PROXY: ""
-      OM_IP: ""
-
 
   - task: selective-deploy
     file: pcf-pipelines/tasks/selective-deploy/task.yml
     params:
       OPSMAN_CLIENT_ID: {{opsman_client_id}}
       OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPSMAN_USERNAME: {{opsman_admin_username}}
-      OPSMAN_PASSWORD: {{opsman_admin_password}}
       OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}

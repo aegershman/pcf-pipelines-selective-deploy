@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eu-o pipefail
+set -eu
 [ 'true' = "${DEBUG:-}" ] && set -x
 
 echo "Downloading FLY from Concourse server $URL"
