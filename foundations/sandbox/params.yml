@@ -40,3 +40,13 @@ product_slug: ~
 
 # The minor product version to track, as a regexp. To track 1.11.x of a product, this would be "^2\.0\.[0-9]+$", as shown below.
 product_version_regex: ~
+
+# Slug for PCF Stemcells. Basically don't touch this.
+stemcell_slug: "stemcells"
+
+# Match the stemcell glob pattern for your IaaS. This value will be the same as iaas_type, except with *'s around it.
+stemcell_globs: "*aws*"
+
+# Basically don't touch this.
+pcf_pipelines_uri: https://github.com/aegershman/pcf-pipelines-selective-deploy.git
+pcf_pipelines_branch: master
