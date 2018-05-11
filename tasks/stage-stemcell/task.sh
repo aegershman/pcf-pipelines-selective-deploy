@@ -15,12 +15,12 @@ STEMCELL_VERSION=$(cat stemcell/metadata.json |
 
 # 2 Must extract the product GUID of what we're targeting
 STAGED=$(om-linux \
-	--skip-ssl-validation \
+	--target https://$OPSMAN_DOMAIN_OR_IP_ADDRESS \
 	--client-id "${OPSMAN_CLIENT_ID}" \
 	--client-secret "${OPSMAN_CLIENT_SECRET}" \
-	--username "${OPSMAN_USERNAME}" \
-	--password "${OPSMAN_PASSWORD}" \
-	--target "https://${OPSMAN_DOMAIN_OR_IP_ADDRESS}" \
+	--username "$OPS_MGR_USR" \
+	--password "$OPS_MGR_PWD" \
+	--skip-ssl-validation \
 	curl -path /api/v0/staged/products)
 
 # Should the slug contain more than one product, pick only the first.
