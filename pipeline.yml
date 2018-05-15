@@ -9,36 +9,36 @@ resources:
 - name: pcf-pipelines
   type: git
   source:
-    uri: {{pcf_pipelines_uri}}
-    branch: {{pcf_pipelines_branch}}
+    uri: ((pcf_pipelines_uri))
+    branch: ((pcf_pipelines_branch))
 
 - name: tile
   type: pivnet
   source:
-    api_token: {{pivnet_token}}
-    product_slug: {{product_slug}}
-    product_version: {{product_version_regex}}
+    api_token: ((pivnet_token))
+    product_slug: ((product_slug))
+    product_version: ((product_version_regex))
     sort_by: semver
-    region: {{pivnet_region}}
+    region: ((pivnet_region))
 
 - name: stemcell
   type: pivnet
   source:
-    api_token: {{pivnet_token}}
-    product_slug: {{stemcell_slug}}
-    product_version: {{product_stemcell_version_regex}}
+    api_token: ((pivnet_token))
+    product_slug: ((stemcell_slug))
+    product_version: ((product_stemcell_version_regex))
     sort_by: semver
-    region: {{pivnet_region}}
+    region: ((pivnet_region))
 
 - name: opsman-lock
   type: pool
   source:
-    uri: {{opsman_lock_uri}}
-    branch: {{opsman_lock_branch}}
-    username: {{opsman_lock_username}}
-    password: {{opsman_lock_password}}
-    retry_delay: {{opsman_lock_retry_delay}}
-    pool: {{opsman_lock_pool}}
+    uri: ((opsman_lock_uri))
+    branch: ((opsman_lock_branch))
+    username: ((opsman_lock_username))
+    password: ((opsman_lock_password))
+    retry_delay: ((opsman_lock_retry_delay))
+    pool: ((opsman_lock_pool))
 
 jobs:
 - name: upload-stemcell
@@ -48,13 +48,13 @@ jobs:
     - get: stemcell
       trigger: true
       params:
-        globs: [ {{stemcell_globs}} ]
+        globs: [ ((stemcell_globs)) ]
   - task: upload-stemcell
     file: pcf-pipelines/tasks/upload-stemcell/task.yml
     params:
-      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
-      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+      OPSMAN_CLIENT_ID: ((opsman_client_id))
+      OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
 
 - name: upload-tile
   plan:
@@ -64,13 +64,13 @@ jobs:
       resource: tile
       trigger: true
       params:
-        globs: [ {{product_globs}} ]
+        globs: [ ((product_globs)) ]
   - task: upload-tile
     file: pcf-pipelines/tasks/upload-product/task.yml
     params:
-      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
-      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+      OPSMAN_CLIENT_ID: ((opsman_client_id))
+      OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
 
 - name: stage-and-apply-changes
   plan:
@@ -85,35 +85,35 @@ jobs:
       passed: [ upload-stemcell ]
       trigger: true
       params:
-        globs: [ {{stemcell_globs}} ]
+        globs: [ ((stemcell_globs)) ]
 
     - get: pivnet-product
       resource: tile
       passed: [ upload-tile ]
       trigger: true
       params:
-        globs: [ {{product_globs}} ]
+        globs: [ ((product_globs)) ]
 
   - task: stage-tile
     file: pcf-pipelines/tasks/stage-product/task.yml
     params:
-      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
+      OPSMAN_CLIENT_ID: ((opsman_client_id))
+      OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
 
   - task: stage-stemcell
     file: pcf-pipelines/tasks/stage-stemcell/task.yml
     params:
-      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
-      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+      OPSMAN_CLIENT_ID: ((opsman_client_id))
+      OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
 
   - task: selective-deploy
     file: pcf-pipelines/tasks/selective-deploy/task.yml
     params:
-      OPSMAN_CLIENT_ID: {{opsman_client_id}}
-      OPSMAN_CLIENT_SECRET: {{opsman_client_secret}}
-      OPSMAN_DOMAIN_OR_IP_ADDRESS: {{opsman_domain_or_ip_address}}
+      OPSMAN_CLIENT_ID: ((opsman_client_id))
+      OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
+      OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
 
   ensure:
     put: opsman-lock
