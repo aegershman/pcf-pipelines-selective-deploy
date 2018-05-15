@@ -47,8 +47,7 @@ jobs:
     - get: pcf-pipelines
     - get: stemcell
       trigger: true
-      params:
-        globs: [ ((stemcell_globs)) ]
+      params: {globs: [((stemcell_globs))]}
   - task: upload-stemcell
     file: pcf-pipelines/tasks/upload-stemcell/task.yml
     params:
@@ -63,8 +62,7 @@ jobs:
     - get: pivnet-product
       resource: tile
       trigger: true
-      params:
-        globs: [ ((product_globs)) ]
+      params: {globs: [((product_globs))]}
   - task: upload-tile
     file: pcf-pipelines/tasks/upload-product/task.yml
     params:
@@ -75,47 +73,36 @@ jobs:
 - name: stage-and-apply-changes
   plan:
   - aggregate:
-
     - put: opsman-lock
       params: {acquire: true}
-
     - get: pcf-pipelines
-
     - get: stemcell
-      passed: [ upload-stemcell ]
+      passed: [upload-stemcell]
       trigger: true
-      params:
-        globs: [ ((stemcell_globs)) ]
-
+      params: {globs: [((stemcell_globs))]}
     - get: pivnet-product
       resource: tile
-      passed: [ upload-tile ]
+      passed: [upload-tile]
       trigger: true
-      params:
-        globs: [ ((product_globs)) ]
-
+      params: {globs: [((product_globs))]}
   - task: stage-tile
     file: pcf-pipelines/tasks/stage-product/task.yml
     params:
       OPSMAN_CLIENT_ID: ((opsman_client_id))
       OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
       OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
-
   - task: stage-stemcell
     file: pcf-pipelines/tasks/stage-stemcell/task.yml
     params:
       OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
       OPSMAN_CLIENT_ID: ((opsman_client_id))
       OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
-
   - task: selective-deploy
     file: pcf-pipelines/tasks/selective-deploy/task.yml
     params:
       OPSMAN_CLIENT_ID: ((opsman_client_id))
       OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
       OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
-
   ensure:
     put: opsman-lock
-    params:
-      release: opsman-lock
+    params: {release: opsman-lock}
