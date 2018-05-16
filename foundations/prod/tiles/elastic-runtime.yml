@@ -1,0 +1,4 @@
+product_slug: elastic-runtime
+product_version_regex: 2\.1\.1
+product_stemcell_version_regex: 3541\.12
+product_globs: 'cf*pivotal'

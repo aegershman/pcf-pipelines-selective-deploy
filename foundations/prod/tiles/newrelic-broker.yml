@@ -1,0 +1,3 @@
+product_slug: newrelic-broker
+product_version_regex: 1\.12\.9
+product_stemcell_version_regex: 3468\.30

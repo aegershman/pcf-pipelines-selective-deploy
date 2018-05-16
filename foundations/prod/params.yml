@@ -1,0 +1,58 @@
+opsman_client_id: ((prod-opsman-client.username))
+opsman_client_secret: ((prod-opsman-client.password))
+opsman_domain_or_ip_address: ((prod-opsman.domain_or_ip_address))
+
+pivnet_token: ((pivnet_token))
+pivnet_region: us-west-2
+
+# For products such as ERT, it is recommended to use "cf*pivotal" to avoid the
+# extra download of the SRT file in PCF 1.12.*
+product_globs: "*pivotal"
+
+# om-linux
+# ------------------------------
+# The name of the product on Pivotal Network. This is used to configure the
+# resource that will fetch the product file.
+#
+# This can be found in the URL of the product page, e.g. for rabbitmq the URL
+# is https://network.pivotal.io/products/pivotal-rabbitmq-service, and the
+# product slug is 'pivotal-rabbitmq-service'.
+product_slug: ~
+
+# The minor product version to track, as a regexp. To track 1.11.x of a product, this would be "^2\.0\.[0-9]+$"
+product_version_regex: ~
+
+# Slug for PCF Stemcells. Basically don't touch this.
+stemcell_slug: "stemcells"
+
+# Match the stemcell glob pattern for your IaaS. This value will be the same as iaas_type, except with *'s around it.
+stemcell_globs: "*aws*"
+
+# Basically don't touch this.
+pcf_pipelines_uri: https://github.com/aegershman/pcf-pipelines-selective-deploy.git
+pcf_pipelines_branch: master
+
+# Used for "pool locks", which operate as a semaphore around your opsman installation
+opsman_lock_uri: https://github.com/aegershman/pcf-pipelines-selective-deploy.git
+opsman_lock_branch: POOL_LOCKS
+opsman_lock_username: ~
+opsman_lock_password: ~
+opsman_lock_retry_delay: 30s
+opsman_lock_pool: prod-opsman
+
+# For opsman backups
+s3_endpoint: https://s3-us-west-2.amazonaws.com
+s3_region_name: us-west-2
+s3_server_side_encryption: AES256
+s3_access_key_id: ((prod-s3-user.username))
+s3_secret_access_key: ((prod-s3-user.password))
+
+s3_installation_zip_bucket: prod-backups-cernercf
+s3_installation_zip_versioned_file: opsman-installation/installation.zip
+
+s3_exported_diagnostic_report_json_bucket: prod-backups-cernercf
+s3_exported_diagnostic_report_json_versioned_file: opsman-installation/exported-diagnostic-report.json
+
+# Alerting when a pipeline fails
+slack_notification_channel: '#prod_pcf_alerts'
+slack_notification_url: ((slack-notification-url))
