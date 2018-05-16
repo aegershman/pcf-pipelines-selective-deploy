@@ -12,6 +12,28 @@ resources:
     uri: ((pcf_pipelines_uri))
     branch: ((pcf_pipelines_branch))
 
+- name: s3-installation-zip
+  type: s3
+  source:
+    versioned_file: ((s3_installation_zip_versioned_file))
+    region_name: ((s3_region_name))
+    endpoint: ((s3-endpoint))
+    server_side_encryption: ((s3_server_side_encryption))
+    bucket: ((s3_installation_zip_bucket))
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+
+- name: s3-exported-diagnostic-report-json
+  type: s3
+  source:
+    versioned_file: ((s3_exported_diagnostic_report_json_versioned_file))
+    region_name: ((s3_region_name))
+    endpoint: ((s3-endpoint))
+    server_side_encryption: ((s3_server_side_encryption))
+    bucket: ((s3_exported_diagnostic_report_json_bucket))
+    access_key_id: ((s3_access_key_id))
+    secret_access_key: ((s3_secret_access_key))
+
 - name: tile
   type: pivnet
   source:
@@ -85,6 +107,9 @@ jobs:
       passed: [upload-tile]
       trigger: true
       params: {globs: [((product_globs))]}
+  # Notice that we need to stage the tile, THEN stage the stemcell.
+  # This cannot be done in parallel. The tile must be staged before
+  # we can stage & associate the stemcell to the tile.
   - task: stage-tile
     file: pcf-pipelines/tasks/stage-product/task.yml
     params:
@@ -103,6 +128,28 @@ jobs:
       OPSMAN_CLIENT_ID: ((opsman_client_id))
       OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
       OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+
+  - aggregate:
+    - do:
+      - task: export-opsmgr-settings
+        file: pcf-pipelines/tasks/export-opsmgr-settings/task.yml
+        params:
+          OPSMAN_CLIENT_ID: ((opsman_client_id))
+          OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
+          OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+      - put: s3-installation-zip
+        params: {file: opsmgr-settings/installation.zip}
+
+    - do:
+      - task: export-opsmgr-diagnostic-report
+        file: pcf-pipelines/tasks/export-opsmgr-diagnostic-report/task.yml
+        params:
+          OPSMAN_CLIENT_ID: ((opsman_client_id))
+          OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
+          OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+      - put: s3-exported-diagnostic-report-json
+        params: {file: diagnostic-report/exported-diagnostic-report.json}
+
   ensure:
     put: opsman-lock
     params: {release: opsman-lock}
