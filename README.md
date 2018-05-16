@@ -2,7 +2,7 @@
 
 [Please see Project page for backlog of priorities. Especially need to re-implement tile versions being passed from one foundation to the next.](https://github.com/aegershman/pcf-pipelines-selective-deploy/projects/1)
 
-![single-foundation pipeline](_assets/v3.png)
+![single-foundation pipeline](_assets/v4.png)
 
 This project is a minimal-compelling product & demonstration of automated selective-deploys for both products and stemcells for a single foundation. New product patch version comes out? Download/stage/selective-deploy it. New stemcell comes out for a product? No problem. Download/upload the latest stemcell, _selectively apply the stemcell to a single product_, then do a selective deploy on *only* that product.
 
