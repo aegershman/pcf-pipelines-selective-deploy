@@ -52,3 +52,7 @@ s3_installation_zip_versioned_file: opsman-installation/installation.zip
 
 s3_exported_diagnostic_report_json_bucket: sandbox-backups-cernercf
 s3_exported_diagnostic_report_json_versioned_file: opsman-installation/exported-diagnostic-report.json
+
+# Alerting when a pipeline fails
+slack_notification_channel: '#sandbox_pcf_alerts'
+slack_notification_url: ((slack-notification-url))

@@ -5,7 +5,18 @@ resource_types:
     repository: pivotalcf/pivnet-resource
     tag: latest-final
 
+- name: slack-notification
+  type: docker-image
+  source:
+    repository: cfcommunity/slack-notification-resource
+    tag: latest
+
 resources:
+- name: slack
+  type: slack-notification
+  source:
+    url: ((slack_notification_url))
+
 - name: pcf-pipelines
   type: git
   source:
@@ -108,6 +119,13 @@ jobs:
       trigger: true
       params: {globs: [((product_globs))]}
 
+  # Alert channel that an upgrade has officially started
+  - put: slack
+    params:
+      username: "((product_slug))"
+      channel: ((slack_notification_channel))
+      text: ':arrow_upper_right: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME-$BUILD_NAME>'
+
   # Notice that we need to stage the tile, THEN stage the stemcell.
   # This cannot be done in parallel. The tile must be staged before
   # we can stage & associate the stemcell to the tile.
@@ -150,6 +168,13 @@ jobs:
           OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
       - put: s3-exported-diagnostic-report-json
         params: {file: diagnostic-report/exported-diagnostic-report.json}
+
+  on_failure:
+    put: slack
+    params:
+      username: "((product_slug))"
+      channel: ((slack_notification_channel))
+      text: ':x: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME-$BUILD_NAME>'
 
   ensure:
     put: opsman-lock
