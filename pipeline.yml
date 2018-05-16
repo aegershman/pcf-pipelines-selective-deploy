@@ -174,7 +174,7 @@ jobs:
     params:
       username: "((product_slug))"
       channel: ((slack_notification_channel))
-      text: ':x: <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME-$BUILD_NAME>'
+      text: ':x: <!channel> <$ATC_EXTERNAL_URL/teams/$BUILD_TEAM_NAME/pipelines/$BUILD_PIPELINE_NAME/jobs/$BUILD_JOB_NAME/builds/$BUILD_NAME|$BUILD_JOB_NAME-$BUILD_NAME>'
 
   ensure:
     put: opsman-lock
