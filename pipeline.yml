@@ -17,7 +17,7 @@ resources:
   source:
     versioned_file: ((s3_installation_zip_versioned_file))
     region_name: ((s3_region_name))
-    endpoint: ((s3-endpoint))
+    endpoint: ((s3_endpoint))
     server_side_encryption: ((s3_server_side_encryption))
     bucket: ((s3_installation_zip_bucket))
     access_key_id: ((s3_access_key_id))
@@ -28,7 +28,7 @@ resources:
   source:
     versioned_file: ((s3_exported_diagnostic_report_json_versioned_file))
     region_name: ((s3_region_name))
-    endpoint: ((s3-endpoint))
+    endpoint: ((s3_endpoint))
     server_side_encryption: ((s3_server_side_encryption))
     bucket: ((s3_exported_diagnostic_report_json_bucket))
     access_key_id: ((s3_access_key_id))
@@ -107,6 +107,7 @@ jobs:
       passed: [upload-tile]
       trigger: true
       params: {globs: [((product_globs))]}
+
   # Notice that we need to stage the tile, THEN stage the stemcell.
   # This cannot be done in parallel. The tile must be staged before
   # we can stage & associate the stemcell to the tile.
@@ -137,9 +138,9 @@ jobs:
           OPSMAN_CLIENT_ID: ((opsman_client_id))
           OPSMAN_CLIENT_SECRET: ((opsman_client_secret))
           OPSMAN_DOMAIN_OR_IP_ADDRESS: ((opsman_domain_or_ip_address))
+          OPSMAN_SETTINGS_FILENAME: installation.zip
       - put: s3-installation-zip
         params: {file: opsmgr-settings/installation.zip}
-
     - do:
       - task: export-opsmgr-diagnostic-report
         file: pcf-pipelines/tasks/export-opsmgr-diagnostic-report/task.yml
