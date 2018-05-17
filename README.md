@@ -1,6 +1,6 @@
-# pcf-pipelines-selective-deploy
+# upgrade-tiles
 
-[Please see Project page for backlog of priorities. Especially need to re-implement tile versions being passed from one foundation to the next.](https://github.com/aegershman/pcf-pipelines-selective-deploy/projects/1)
+[Please see Project page for backlog of priorities. Especially need to re-implement tile versions being passed from one foundation to the next.](https://github.com/aegershman/upgrade-tiles/projects/1)
 
 ![single-foundation pipeline](_assets/v4.png)
 
@@ -41,4 +41,4 @@ That creates an empty branch. Then, you just set it up like how they do in the `
 
 ## ideas / concerns
 
-If you've got feedback, questions, concerns, ideas, praise, vitriol, etc., [please create an issue](https://github.com/aegershman/pcf-pipelines-selective-deploy/issues). Any comments are welcome.
+If you've got feedback, questions, concerns, ideas, praise, vitriol, etc., [please create an issue](https://github.com/aegershman/upgrade-tiles/issues). Any comments are welcome.
